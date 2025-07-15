@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentNomics - Your Tokenomics Intelligence Agent</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Matrix Rain Effect */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.1;
+        }
+
+        /* Cyberpunk Grid Background */
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: float 8s infinite linear;
+            box-shadow: 0 0 10px #00ffff;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff0080, #00ffff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            from { filter: drop-shadow(0 0 10px rgba(255, 0, 128, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8)); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            padding: 8rem 2rem 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(255, 0, 128, 0.1) 0%, transparent 70%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.1;
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff0080, #00ffff, #ff0080, #00ffff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero .subtitle {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00ffff;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            color: #cccccc;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border: 2px solid;
+            border-radius: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Orbitron', monospace;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff0080, #00ffff);
+            color: #000;
+            border-color: #00ffff;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #00ffff;
+            border-color: #00ffff;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 30px rgba(0, 255, 255, 0.3),
+                0 0 50px rgba(255, 0, 128, 0.2);
+        }
+
+        /* 3D Cards */
+        .card {
+            background: linear-gradient(145deg, rgba(0, 20, 40, 0.8), rgba(0, 40, 80, 0.4));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 0;
+            padding: 2.5rem;
+            margin: 1rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
+            transform-style: preserve-3d;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 128, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.5),
+                0 0 50px rgba(0, 255, 255, 0.3),
+                inset 0 0 50px rgba(255, 0, 128, 0.1);
+            border-color: #ff0080;
+        }
+
+        .card h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            perspective: 1000px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(45deg, #ff0080, #00ffff, #ff0080);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff0080, #00ffff);
+            animation: lineGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes lineGlow {
+            from { box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
+            to { box-shadow: 0 0 30px rgba(255, 0, 128, 0.8); }
+        }
+
+        /* Holographic Risk Table */
+        .risk-table {
+            background: linear-gradient(145deg, rgba(0, 20, 40, 0.9), rgba(0, 40, 80, 0.5));
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+            position: relative;
+            clip-path: polygon(20px 0%, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
+        }
+
+        .risk-table::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: scanLine 3s linear infinite;
+        }
+
+        @keyframes scanLine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .risk-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .risk-table th,
+        .risk-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            font-weight: 600;
+        }
+
+        .risk-table th {
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 128, 0.2));
+            color: #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .risk-table td {
+            color: #cccccc;
+        }
+
+        .risk-low { 
+            color: #00ff00; 
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        .risk-medium { 
+            color: #ffaa00; 
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+        }
+        .risk-high { 
+            color: #ff0080; 
+            text-shadow: 0 0 10px rgba(255, 0, 128, 0.5);
+        }
+
+        /* Tokenomics Stats */
+        .tokenomics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .token-stat {
+            background: linear-gradient(145deg, rgba(0, 20, 40, 0.8), rgba(0, 40, 80, 0.4));
+            padding: 2rem;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            transition: all 0.3s ease;
+        }
+
+        .token-stat::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+            animation: rotate 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .token-stat:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .token-stat h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #00ffff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .token-stat p {
+            color: #cccccc;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Roadmap */
+        .roadmap-item {
+            background: linear-gradient(145deg, rgba(0, 20, 40, 0.8), rgba(0, 40, 80, 0.4));
+            padding: 2.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid #ff0080;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+            transition: all 0.4s ease;
+        }
+
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #ff0080, #00ffff);
+            animation: roadmapGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes roadmapGlow {
+            from { box-shadow: 0 0 20px rgba(255, 0, 128, 0.5); }
+            to { box-shadow: 0 0 40px rgba(0, 255, 255, 0.8); }
+        }
+
+        .roadmap-item:hover {
+            transform: translateX(20px);
+            border-left-color: #00ffff;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .roadmap-quarter {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ff0080;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+
+
+        /* FAQ */
+        .faq-item {
+            background: linear-gradient(145deg, rgba(0, 20, 40, 0.8), rgba(0, 40, 80, 0.4));
+            margin: 1.5rem 0;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            overflow: hidden;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: #ff0080;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .faq-question {
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 128, 0.1));
+            padding: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #00ffff;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .faq-question:hover {
+            background: linear-gradient(90deg, rgba(255, 0, 128, 0.2), rgba(0, 255, 255, 0.1));
+            color: #ff0080;
+        }
+
+        .faq-answer {
+            padding: 1.5rem;
+            color: #cccccc;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.4rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 6rem 1rem 2rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+        }
+
+        .scroll-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0080, #00ffff, #ff0080);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    <div class="cyber-grid"></div>
+    <div class="particles" id="particles"></div>
+    
+    <div class="scroll-indicator">
+        <div class="scroll-progress" id="scrollProgress"></div>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">🧠 AGENTNOMICS</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#dashboard">Dashboard</a>
+                <a href="#token">Token</a>
+                <a href="#roadmap">Roadmap</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>AGENTNOMICS</h1>
+            <div class="subtitle">TOKENOMICS INTELLIGENCE AGENT</div>
+            <p>The AI-powered token risk detector that protects your capital before you invest. Built for the Virtuals ecosystem with cutting-edge blockchain analysis.</p>
+            
+            <div class="cta-buttons">
+                <a href="#dashboard" class="btn btn-primary">📊 Risk Scores</a>
+                <a href="#token" class="btn btn-secondary">🧠 Genesis Launch</a>
+                <a href="#how-it-works" class="btn btn-secondary">🎯 Analyze Project</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">🧠 How It Works</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Smart Contract Scanner</h3>
+                    <p>AgentNomics reads token smart contracts on-chain to extract:</p>
+                    <ul style="margin: 1rem 0; color: #cccccc; font-size: 1.1rem;">
+                        <li>⚡ Vesting schedules</li>
+                        <li>🔐 Dev wallet locks</li>
+                        <li>💧 Liquidity pool settings</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>Whitepaper NLP Parser</h3>
+                    <p>Our AI extracts token distribution, lock durations, and cliff periods from whitepapers automatically using advanced natural language processing.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Wallet Monitoring Engine</h3>
+                    <p>We track top token holders, suspicious wallet behaviors, and pre-launch transactions with real-time blockchain monitoring.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Risk Scoring System</h3>
+                    <p>We generate a real-time 0–100 Token Risk Score using weighted metrics:</p>
+                    <ul style="margin: 1rem 0; color: #cccccc; font-size: 1.1rem;">
+                        <li>🛡️ 35% vesting safety</li>
+                        <li>💧 25% liquidity lock status</li>
+                        <li>👨‍💻 20% dev wallet behavior</li>
+                        <li>🌐 20% community sentiment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard">
+        <div class="container">
+            <h2 class="section-title">📊 Live Risk Dashboard</h2>
+            <p style="text-align: center; font-size: 1.3rem; color: #cccccc; margin-bottom: 3rem;">
+                Dynamic holographic table powered by on-chain + off-chain data
+            </p>
+            
+            <div class="risk-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>TOKEN</th>
+                            <th>VESTING</th>
+                            <th>LIQUIDITY</th>
+                            <th>DEV LOCK</th>
+                            <th>SCORE</th>
+                            <th>RISK</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>$HOLLY</strong></td>
+                            <td>12 mo linear</td>
+                            <td>12.5%</td>
+                            <td>✅</td>
+                            <td><span class="risk-low">94</span></td>
+                            <td><span class="risk-low">LOW</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>$AYB</strong></td>
+                            <td>3 mo cliff</td>
+                            <td>10%</td>
+                            <td>❌</td>
+                            <td><span class="risk-high">68</span></td>
+                            <td><span class="risk-high">HIGH</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>$BIOS</strong></td>
+                            <td>18 mo vesting</td>
+                            <td>20%</td>
+                            <td>✅</td>
+                            <td><span class="risk-medium">88</span></td>
+                            <td><span class="risk-medium">MEDIUM</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn btn-primary">Submit Token Analysis</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Token Section -->
+    <section id="token">
+        <div class="container">
+            <h2 class="section-title">💰 $AGNO Token Utility</h2>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>ACCESS & ALERTS</h3>
+                    <ul style="color: #cccccc; font-size: 1.1rem;">
+                        <li>🔓 Access full token risk scores</li>
+                        <li>⚡ Receive early alerts for Genesis launches</li>
+                        <li>💎 Unlock premium dashboard features</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>API & INTEGRATION</h3>
+                    <ul style="color: #cccccc; font-size: 1.1rem;">
+                        <li>🤖 Integrate risk scoring into your DEX bots via API</li>
+                        <li>🚀 Developers can boost launch score by locking tokens</li>
+                    </ul>
+                </div>
+            </div>
+            
+
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology">
+        <div class="container">
+            <h2 class="section-title">🛠️ Technology</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>G.A.M.E INTEGRATION</h3>
+                    <p>Modular AI engine by Virtuals with advanced machine learning capabilities for real-time blockchain analysis.</p>
+                </div>
+                <div class="card">
+                    <h3>WHITEPAPER NLP MODULE</h3>
+                    <p>GPT-based extraction of tokenomics data with natural language understanding for complex document parsing.</p>
+                </div>
+                <div class="card">
+                    <h3>WALLET INTELLIGENCE FEED</h3>
+                    <p>Smart money behavior scoring with advanced pattern recognition and anomaly detection algorithms.</p>
+                </div>
+                <div class="card">
+                    <h3>RUG DETECTION ENGINE</h3>
+                    <p>Flags contract anomalies and unlock patterns using machine learning and behavioral analysis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Roadmap Section -->
+    <section id="roadmap">
+        <div class="container">
+            <h2 class="section-title">📅 Roadmap</h2>
+            <div class="roadmap">
+                <div class="roadmap-item">
+                    <div class="roadmap-quarter">Q3 2025</div>
+                    <h3 style="color: #00ffff; font-family: 'Orbitron', monospace; margin-bottom: 1rem;">FOUNDATION</h3>
+                    <ul style="color: #cccccc; font-size: 1.1rem;">
+                        <li>🚀 MVP Release</li>
+                        <li>🧠 Genesis launch with Virtuals</li>
+                    </ul>
+                </div>
+                
+                <div class="roadmap-item">
+                    <div class="roadmap-quarter">Q4 2025</div>
+                    <h3 style="color: #00ffff; font-family: 'Orbitron', monospace; margin-bottom: 1rem;">CORE FEATURES</h3>
+                    <ul style="color: #cccccc; font-size: 1.1rem;">
+                        <li>📊 Live Risk Dashboard</li>
+                        <li>🤖 DEX bot API rollout</li>
+                    </ul>
+                </div>
+                
+                <div class="roadmap-item">
+                    <div class="roadmap-quarter">Q1 2026</div>
+                    <h3 style="color: #00ffff; font-family: 'Orbitron', monospace; margin-bottom: 1rem;">COMMUNITY INTEGRATION</h3>
+                    <ul style="color: #cccccc; font-size: 1.1rem;">
+                        <li>🌐 Community score feedback loop</li>
+                        <li>⚡ Advanced wallet & liquidity alerts</li>
+                    </ul>
+                </div>
+                
+                <div class="roadmap-item">
+                    <div class="roadmap-quarter">Q2 2026</div>
+                    <h3 style="color: #00ffff; font-family: 'Orbitron', monospace; margin-bottom: 1rem;">EXPANSION</h3>
+                    <ul style="color: #cccccc; font-size: 1.1rem;">
+                        <li>💎 AGNO staking</li>
+                        <li>🌍 Multichain support (Base, Solana)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq">
+        <div class="container">
+            <h2 class="section-title">❓ FAQ</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: What is AgentNomics?</div>
+                <div class="faq-answer">An AI agent that scans tokenomics and assigns a risk score to every new token launch using advanced blockchain analysis and machine learning algorithms.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Can scores be manipulated?</div>
+                <div class="faq-answer">No. We use on-chain logic and immutable datasets. All parameters are verifiable through blockchain transparency and cryptographic proofs.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Why do I need the $AGNO token?</div>
+                <div class="faq-answer">For premium score access, early alerts, API integration, and exclusive features that give you an edge in token analysis and investment decisions.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Is this open-source?</div>
+                <div class="faq-answer">The scoring algorithm is auditable via our upcoming whitepaper and will feature transparent, verifiable methodologies for community trust.</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const matrixChars = '01AGENTNOMICSΛΩΦΨ∑∏∆∇∈∉∋∌∪∩⊆⊇⊂⊃∅∞';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00ffff';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Floating Particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll progress indicator
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(0, 0, 0, 0.95)';
+                nav.style.borderBottomColor = 'rgba(0, 255, 255, 0.5)';
+            } else {
+                nav.style.background = 'rgba(0, 0, 0, 0.9)';
+                nav.style.borderBottomColor = 'rgba(0, 255, 255, 0.3)';
+            }
+        });
+
+        // Add entrance animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and sections
+        document.querySelectorAll('.card, .roadmap-item, .team-member, .faq-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px) rotateX(-10deg)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            observer.observe(el);
+        });
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
